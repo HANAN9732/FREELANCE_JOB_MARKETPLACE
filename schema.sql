@@ -2,28 +2,41 @@
 -- USERS
 -- ----------------------------------------------------------------------------
 CREATE TABLE users (
+    id              CHAR(36)        NOT NULL PRIMARY KEY,
+    name            VARCHAR(150)    NOT NULL,
+    email           VARCHAR(255)    NOT NULL,
+    password_hash   VARCHAR(255)    NOT NULL,
+    role            ENUM('user','admin') NOT NULL DEFAULT 'user',
+
+    created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+                                     ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at      TIMESTAMP NULL,
+
+    UNIQUE KEY uq_users_email (email)
+);
+
+CREATE TABLE user_profiles (
     id                      CHAR(36)        NOT NULL PRIMARY KEY,
-    name                    VARCHAR(150)    NOT NULL,
-    email                   VARCHAR(255)    NOT NULL,
-    password_hash           VARCHAR(255)    NOT NULL,
-    role                    ENUM('user','admin') NOT NULL DEFAULT 'user',
+    user_id                 CHAR(36)        NOT NULL,
     bio                     TEXT            NULL,
     avatar_path             VARCHAR(500)    NULL,
     rating                  DECIMAL(3,2)    NOT NULL DEFAULT 0.00,
     reviews_received_count  INT UNSIGNED    NOT NULL DEFAULT 0,
-    profile_completeness    TINYINT UNSIGNED NOT NULL DEFAULT 0,  -- 0-100 (%)
-    is_suspended            BOOLEAN         NOT NULL DEFAULT FALSE,
-    suspended_at            TIMESTAMP       NULL,
+    profile_completeness    TINYINT UNSIGNED NOT NULL DEFAULT 0,
+    is_suspended             BOOLEAN         NOT NULL DEFAULT FALSE,
+    suspended_at             TIMESTAMP       NULL,
 
     created_at              TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at              TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP
-                                             ON UPDATE CURRENT_TIMESTAMP,
+                                      ON UPDATE CURRENT_TIMESTAMP,
     deleted_at              TIMESTAMP       NULL,
 
-    UNIQUE KEY uq_users_email (email),
-    INDEX idx_users_rating (rating),
-    FULLTEXT INDEX ft_users_name_bio (name, bio)
-) 
+    UNIQUE KEY uq_user_profiles_user_id (user_id),
+
+    FOREIGN KEY (user_id)
+        REFERENCES users(id)
+);
 
 -- ----------------------------------------------------------------------------
 -- REFRESH TOKENS (needed for JWT refresh-token flow + revocation on logout)
