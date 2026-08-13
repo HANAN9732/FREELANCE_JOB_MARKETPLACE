@@ -1,0 +1,69 @@
+from datetime import datetime, timedelta, timezone
+
+from jose import JWTError, jwt
+from passlib.context import CryptContext
+
+from app.core.config import settings
+
+
+pwd_context = CryptContext(
+    schemes=["bcrypt"],
+    deprecated="auto"
+)
+
+
+def hash_password(password: str) -> str:
+    return pwd_context.hash(password)
+
+
+def verify_password(password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(password, hashed_password)
+
+
+def create_access_token(user_id: str) -> str:
+    expire = datetime.now(timezone.utc) + timedelta(
+        minutes=30
+    )
+
+    payload = {
+        "sub": user_id,
+        "exp": expire
+    }
+
+    return jwt.encode(
+        payload,
+        settings.JWT_SECRET_KEY,
+        algorithm="HS256"
+    )
+
+
+def verify_access_token(token: str) -> str:
+    try:
+        payload = jwt.decode(
+            token,
+            settings.JWT_SECRET_KEY,
+            algorithms=["HS256"]
+        )
+
+        user_id = payload.get("sub")
+
+        if user_id is None:
+            raise JWTError()
+
+        return user_id
+
+    except JWTError:
+        raise ValueError("Invalid or expired token")
+    
+def decode_access_token(token: str):
+    try:
+        payload = jwt.decode(
+            token,
+            settings.JWT_SECRET_KEY,
+            algorithms=["HS256"]
+        )
+
+        return payload
+
+    except JWTError:
+        return None    

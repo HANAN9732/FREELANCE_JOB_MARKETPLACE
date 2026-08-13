@@ -32,10 +32,10 @@ class User(BaseModel):
     )
 
     role: Mapped[str] = mapped_column(
-        Enum("user", "admin"),
-        nullable=False,
-        default="user"
-    )
+    Enum("client", "freelancer", "admin"),
+    nullable=False,
+    default="client"
+)
 
     profile: Mapped["UserProfile"] = relationship(
         "UserProfile",
