@@ -7,6 +7,7 @@ from sqlalchemy import (
     Enum,
     Index,
     UniqueConstraint,
+    
 )
 from sqlalchemy.dialects.mysql import INTEGER
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -47,9 +48,9 @@ class Proposal(BaseModel):
     )
 
     cover_letter_path: Mapped[str] = mapped_column(
-        String(500),
-        nullable=False
-    )
+    String(500),
+    nullable=False
+)
 
     delivery_time_days: Mapped[int] = mapped_column(
         INTEGER(unsigned=True),

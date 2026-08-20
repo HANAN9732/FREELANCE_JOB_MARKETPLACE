@@ -68,17 +68,20 @@ class Notification(Base):
         default=datetime.utcnow
     )
 
-    # Relationship
     user: Mapped["User"] = relationship(
         "User",
         foreign_keys=[user_id]
     )
 
-    # Index
     __table_args__ = (
         Index(
             "idx_notifications_user_read",
             "user_id",
             "is_read"
+        ),
+        Index(
+            "idx_notifications_user_created",
+            "user_id",
+            "created_at"
         ),
     )

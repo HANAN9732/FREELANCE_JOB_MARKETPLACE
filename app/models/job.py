@@ -9,6 +9,7 @@ from sqlalchemy import (
     Enum,
     Numeric,
     Index,
+    Boolean
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -54,17 +55,18 @@ class Job(BaseModel):
     )
 
     status: Mapped[str] = mapped_column(
-        Enum(
-            "open",
-            "assigned",
-            "in_progress",
-            "completed",
-            "closed",
-            name="job_status"
-        ),
-        nullable=False,
-        default="open"
-    )
+    Enum(
+        "open",
+        "assigned",
+        "in_progress",
+        "pending_client_approval",  # freelancer marked work done, waiting on client
+        "completed",
+        "closed",
+        name="job_status"
+    ),
+    nullable=False,
+    default="open"
+)
 
     assigned_freelancer_id: Mapped[str | None] = mapped_column(
         String(36),
@@ -74,6 +76,11 @@ class Job(BaseModel):
         ),
         nullable=True
     )
+    is_deleted: Mapped[bool] = mapped_column(
+    Boolean,
+    nullable=False,
+    default=False
+)
 
     # Relationships
     client: Mapped["User"] = relationship(

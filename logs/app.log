@@ -1,0 +1,3 @@
+2026-08-20 18:56:34 | INFO     | User logged in | user_id=c11a9aa9-b335-476c-ae04-0b3c725e62ab | email=laiba123@gmail.com
+2026-08-20 18:58:49 | INFO     | Job created | job_id=701b43ed-fc42-4b4c-bcb2-abe069dba02d | by user_id=c11a9aa9-b335-476c-ae04-0b3c725e62ab | title=Flutter Mobile App Development
+2026-08-20 19:00:02 | INFO     | Job updated | job_id=701b43ed-fc42-4b4c-bcb2-abe069dba02d | by user_id=c11a9aa9-b335-476c-ae04-0b3c725e62ab | fields=['title', 'description', 'budget', 'deadline']
